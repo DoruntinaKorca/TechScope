@@ -22,7 +22,7 @@ namespace Persistence
         public DbSet<Tag> Tags { get; set; }
         //   public DbSet<User> Users { get; set; }
         public DbSet<UserPreference> UserPreferences { get; set; }
-        public DbSet<UserRole> UserRoless { get; set; }
+      //  public DbSet<UserRole> UserRoless { get; set; }
         public DbSet<Video> Videos { get; set; }
 
 
@@ -169,7 +169,7 @@ namespace Persistence
                     .HasColumnName("userDOB");
 
 
-
+                /*
                 entity.Property(e => e.UserFirstName)
                     .IsRequired()
                     .HasMaxLength(50)
@@ -179,7 +179,7 @@ namespace Persistence
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("userLastName");
-
+                */
 
 
                 modelBuilder.Entity<User>()
@@ -187,10 +187,11 @@ namespace Persistence
 
                 //   entity.Property(e => e.UserRoleId).IsRequired().HasColumnName("userRoleId");
 
+                /*
                 entity.HasOne(d => d.UserRolee)
                     .WithMany(p => p.Users)
                     .HasForeignKey("UserRoleId");
-
+                */
 
             });
 
@@ -223,6 +224,8 @@ namespace Persistence
 
             });
 
+            /*
+
             modelBuilder.Entity<UserRole>(entity =>
             {
                 entity.HasKey(e => e.UserRoleId);
@@ -236,6 +239,7 @@ namespace Persistence
                     .HasColumnName("userRoleDescription");
             });
 
+            */
             modelBuilder.Entity<Video>(entity =>
             {
                 entity.HasKey(e => e.VideoId);

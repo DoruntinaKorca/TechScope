@@ -13,6 +13,7 @@ namespace Application.Core
         public MappingProfiles()
         {
             CreateMap<Video, Video>();
+            CreateMap<AppTag, AppTag>();
         }
     }
 }

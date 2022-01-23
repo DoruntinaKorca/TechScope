@@ -9,8 +9,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(TECHSCOPEContext))]
-    [Migration("20220121173219_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220122124023_RemovedPropertiesFromUser")]
+    partial class RemovedPropertiesFromUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -172,18 +172,6 @@ namespace Persistence.Migrations
                         .HasColumnType("date")
                         .HasColumnName("userDOB");
 
-                    b.Property<string>("UserFirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("userFirstName");
-
-                    b.Property<string>("UserLastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("userLastName");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -199,8 +187,6 @@ namespace Persistence.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("UserRoleId");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -218,24 +204,6 @@ namespace Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserPreferences");
-                });
-
-            modelBuilder.Entity("Domain.UserRole", b =>
-                {
-                    b.Property<Guid>("UserRoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("userRoleId");
-
-                    b.Property<string>("UserRoleDescription")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("userRoleDescription");
-
-                    b.HasKey("UserRoleId");
-
-                    b.ToTable("UserRoless");
                 });
 
             modelBuilder.Entity("Domain.Video", b =>
@@ -421,17 +389,6 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Domain.User", b =>
-                {
-                    b.HasOne("Domain.UserRole", "UserRolee")
-                        .WithMany("Users")
-                        .HasForeignKey("UserRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("UserRolee");
-                });
-
             modelBuilder.Entity("Domain.UserPreference", b =>
                 {
                     b.HasOne("Domain.Preference", "Preference")
@@ -530,11 +487,6 @@ namespace Persistence.Migrations
                     b.Navigation("Courses");
 
                     b.Navigation("UserPreferences");
-                });
-
-            modelBuilder.Entity("Domain.UserRole", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

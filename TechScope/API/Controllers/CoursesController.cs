@@ -1,5 +1,6 @@
 ﻿using Application.CourseHandlers;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace API.Controllers
             return await Mediator.Send(new CourseList.Query());
         }
 
-
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<Course>> GetCourse(Guid id)
         {
