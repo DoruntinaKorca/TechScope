@@ -19,6 +19,7 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.AppTag", b =>
                 {
                     b.Property<string>("TagName")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("CourseId")
@@ -29,6 +30,43 @@ namespace Persistence.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("AppTags");
+                });
+
+            modelBuilder.Entity("Domain.Comment", b =>
+                {
+                    b.Property<string>("CommentId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("commentID");
+
+                    b.Property<string>("CommentContent")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("commentContent");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime")
+                        .HasColumnName("dateCreated");
+
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReplyTo")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("replyTo");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("Id");
+
+                    b.HasIndex("ReplyTo");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Domain.Course", b =>
@@ -174,9 +212,6 @@ namespace Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserRoleId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -204,6 +239,20 @@ namespace Persistence.Migrations
                     b.ToTable("UserPreferences");
                 });
 
+            modelBuilder.Entity("Domain.UserRole", b =>
+                {
+                    b.Property<int>("UserRoleId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserRoleDescription")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("UserRoleId");
+
+                    b.ToTable("UserRoless");
+                });
+
             modelBuilder.Entity("Domain.Video", b =>
                 {
                     b.Property<Guid>("VideoId")
@@ -211,7 +260,7 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("videoId");
 
-                    b.Property<Guid>("CourseId")
+                    b.Property<Guid?>("CourseId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("VideoDescription")
@@ -376,6 +425,32 @@ namespace Persistence.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("Domain.Comment", b =>
+                {
+                    b.HasOne("Domain.Course", "Course")
+                        .WithMany("Comments")
+                        .HasForeignKey("CourseId")
+                        .HasConstraintName("FK_Comments_Courses")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.User", "Author")
+                        .WithMany("Comments")
+                        .HasForeignKey("Id")
+                        .HasConstraintName("FK_Comments_Users");
+
+                    b.HasOne("Domain.Comment", "ReplyToC")
+                        .WithMany("InverseReplyTo")
+                        .HasForeignKey("ReplyTo")
+                        .HasConstraintName("FK_Comments_Comments");
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Course");
+
+                    b.Navigation("ReplyToC");
+                });
+
             modelBuilder.Entity("Domain.Course", b =>
                 {
                     b.HasOne("Domain.User", "User")
@@ -410,9 +485,7 @@ namespace Persistence.Migrations
                 {
                     b.HasOne("Domain.Course", "Course")
                         .WithMany("Videos")
-                        .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CourseId");
 
                     b.Navigation("Course");
                 });
@@ -468,9 +541,16 @@ namespace Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Domain.Comment", b =>
+                {
+                    b.Navigation("InverseReplyTo");
+                });
+
             modelBuilder.Entity("Domain.Course", b =>
                 {
                     b.Navigation("AppTags");
+
+                    b.Navigation("Comments");
 
                     b.Navigation("Videos");
                 });
@@ -482,6 +562,8 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.User", b =>
                 {
+                    b.Navigation("Comments");
+
                     b.Navigation("Courses");
 
                     b.Navigation("UserPreferences");

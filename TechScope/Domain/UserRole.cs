@@ -8,9 +8,9 @@ namespace Domain
 {
     public class UserRole
     {
-        public Guid UserRoleId { get; set; }
+        public int UserRoleId { get; set; }
         public string UserRoleDescription { get; set; }
 
-        public ICollection<User> Users { get; set; }
+        //public ICollection<User> Users { get; set; }
     }
 }

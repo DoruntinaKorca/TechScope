@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.DTOs;
+using AutoMapper;
 using Domain;
 using System;
 using System.Collections.Generic;
@@ -12,8 +13,12 @@ namespace Application.Core
     {
         public MappingProfiles()
         {
+            CreateMap<Course, Course>();
             CreateMap<Video, Video>();
             CreateMap<AppTag, AppTag>();
+         //   CreateMap<Course, CourseDto>();
+            CreateMap<Video, VideoDto>();
+            CreateMap<Comment, CommentDto>();
         }
     }
 }

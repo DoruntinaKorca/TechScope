@@ -11,6 +11,7 @@ namespace Domain
     {
     //   [Required]
        //public string CourseId { get; set; }
+       [MaxLength(50)]
         public string TagName { get; set; }
       //  [Required]
         public  Course Course { get; set; }

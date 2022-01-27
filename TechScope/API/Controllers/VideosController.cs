@@ -1,5 +1,5 @@
-﻿using Application.CourseHandlers;
-using Application.CourseHandlers.VideoHandlers;
+﻿using Application.CourseModule;
+using Application.CourseModule.VideoHandlers;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -17,37 +17,39 @@ namespace API.Controllers
 
 
 
-        [HttpGet]
-        public async Task<ActionResult<List<Video>>> GetAllVideos()
+        [HttpGet("getAllVideos/{id}")]
+        public async Task<ActionResult<List<Video>>> GetAllVideos(Guid id)
         {
-            return await Mediator.Send(new VideoList.Query());
+            var videos =  await Mediator.Send(new VideoList.Query { CourseId = id});
+            return HandleResult(videos);
         }
 
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Video>> GetVideo(Guid id)
         {
-            return await Mediator.Send(new VideoDetails.Query { Id = id });
+           var video = await Mediator.Send(new VideoDetails.Query { Id = id });
+            return HandleResult(video);
 
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateVideo(Video video)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> CreateVideo(Video video, Guid id)
         {
-            return Ok(await Mediator.Send(new CreateVideo.Command { Video = video }));
+            return HandleResult(await Mediator.Send(new CreateVideo.Command { Video = video, CourseId = id }));
         }
 
         [HttpPut("{id}")]
         public async Task <IActionResult> UpdateVideo(Video video, Guid id)
         {
             video.VideoId = id;
-            return Ok(await Mediator.Send(new EditVideo.Command{ Video = video}));
+            return HandleResult(await Mediator.Send(new EditVideo.Command{ Video = video}));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVideo(Guid id)
         {
-            return Ok(await Mediator.Send(new DeleteVideo.Command { Id = id }));
+            return HandleResult(await Mediator.Send(new DeleteVideo.Command { Id = id }));
         }
     }
 }

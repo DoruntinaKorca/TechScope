@@ -15,7 +15,7 @@ namespace Domain
         public int VideoLength { get; set; }
 
 
-      [Required]
+     // [Required]
         public Course Course { get; set; }
     }
 }

@@ -25,11 +25,11 @@ namespace Domain
         [Required]
         public User User { get; set; }
 
-        public ICollection<AppTag> AppTags { get; set; }
+        public ICollection<AppTag> AppTags { get; set; } = new List<AppTag>();
 
-       public ICollection<Video> Videos { get; set; }
+        public ICollection<Video> Videos { get; set; } = new List<Video>();
 
-      //  public ICollection<Comment> Comments { get; set; }
+        public ICollection<Comment> Comments { get; set; }
 
 
     }

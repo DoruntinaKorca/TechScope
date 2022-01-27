@@ -1,4 +1,4 @@
-﻿using Application.CourseHandlers;
+﻿using Application.CourseModule;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,29 +13,31 @@ namespace API.Controllers
     {
 
         [HttpGet]
-        public async Task<ActionResult<List<Course>>> GetAllCourses()
+        public async Task<IActionResult> GetAllCourses()
         {
-            return await Mediator.Send(new CourseList.Query());
+            var courses = await Mediator.Send(new CourseList.Query());
+            return HandleResult(courses);
         }
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<Course>> GetCourse(Guid id)
+        public async Task<IActionResult> GetCourse(Guid id)
         {
-            return await Mediator.Send(new CourseDetails.Query { Id = id });
+            var result = await Mediator.Send(new CourseDetails.Query { Id = id });
+            return HandleResult(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateCourse(Course course)
         {
-            return Ok(await Mediator.Send(new CreateCourse.Command { Course = course }));
+            return HandleResult(await Mediator.Send(new CreateCourse.Command { Course = course }));
         }
 
         [HttpPut("id")]
         public async Task<IActionResult> UpdateCourse(Guid id, Course course)
         {
             course.CourseId = id;
-            return Ok(await Mediator.Send(new EditCourse.Command { Course = course }));
+            return HandleResult(await Mediator.Send(new EditCourse.Command { Course = course }));
         }
 
 
@@ -43,7 +45,7 @@ namespace API.Controllers
         [HttpDelete("id")]
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
-            return Ok(await Mediator.Send(new DeleteCourse.Command { Id = id }));
+            return HandleResult(await Mediator.Send(new DeleteCourse.Command { Id = id }));
         }
 
     }

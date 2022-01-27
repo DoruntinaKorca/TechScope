@@ -61,6 +61,7 @@ namespace API.Controllers
                 UserDob = registerDto.DoB,
                 Email = registerDto.Email,
                 UserName = registerDto.Username
+                
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
@@ -82,6 +83,12 @@ namespace API.Controllers
             var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
 
             return CreateUserObject(user);
+        }
+
+        [HttpGet("getAllUsers")]
+        public async Task<ActionResult<List<User>>> GetAllUsers()
+        {
+            return await _userManager.Users.ToListAsync();
         }
 
         private UserDto CreateUserObject(User user)

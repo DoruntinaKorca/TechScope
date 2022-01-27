@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using API.Middleware;
 using API.Services;
 using Application.Core;
-using Application.CourseHandlers;
-using Application.CourseHandlers.TagHandlers;
-using Application.CourseHandlers.VideoHandlers;
+using Application.CourseModule;
+using Application.CourseModule.TagHandlers;
+using Application.CourseModule.VideoHandlers;
+using Application.Interfaces;
+using Application.UserModule;
+using Application.UserModule.PreferenceHandlers;
 using AutoMapper;
 using Domain;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -48,6 +53,11 @@ namespace API
                 //ensures that every endpoint in our api requires authentication unless we tell it otherwise
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
+            }).AddNewtonsoftJson(options =>
+           options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+).AddFluentValidation(Configuration => {
+                Configuration.RegisterValidatorsFromAssemblyContaining<CreateCourse>();
+    Configuration.RegisterValidatorsFromAssemblyContaining<CreatePreference>();
             });
             services.AddSwaggerGen(c =>
             {
@@ -71,10 +81,11 @@ namespace API
             services.AddMediatR(typeof(AppTagList.Handler).Assembly);
             services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
-            services.AddIdentityCore<User>(opt => {
+            services.AddIdentity<User, IdentityRole>(opt => {
                 opt.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<TECHSCOPEContext>()
-            .AddSignInManager<SignInManager<User>>();
+            .AddSignInManager<SignInManager<User>>()
+            .AddRoleManager<RoleManager<IdentityRole>>();
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
 
@@ -91,14 +102,18 @@ namespace API
                     };
                 });
             services.AddScoped<TokenService>();
+            services.AddScoped<IUsernameAccessor, UsernameAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            app.UseMiddleware<ExceptionMiddleware>();
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+               
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
@@ -108,6 +123,8 @@ namespace API
             app.UseRouting();
 
             app.UseCors("CorsPolicy");
+
+            
 
             app.UseAuthentication();
 

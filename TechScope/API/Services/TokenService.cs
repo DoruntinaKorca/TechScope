@@ -30,10 +30,16 @@ namespace API.Services
                // new Claim(ClaimTypes.DateOfBirth, user.UserDob),
             };
 
-            //signing our token
+            //our server signs the token before it leaves our server
+            //per me sign token e perdore ni token key qe osht stored
+            //nserver edhe never leaves the server
+
+            //signing our token with an encripted key
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["TokenKey"]));
 
+
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

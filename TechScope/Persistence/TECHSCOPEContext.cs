@@ -16,13 +16,13 @@ namespace Persistence
         }
 
         public DbSet<AppTag> AppTags { get; set; }
-        //  public DbSet<Comment> Comments { get; set; }
+          public DbSet<Comment> Comments { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Preference> Preferences { get; set; }
         public DbSet<Tag> Tags { get; set; }
         //   public DbSet<User> Users { get; set; }
         public DbSet<UserPreference> UserPreferences { get; set; }
-      //  public DbSet<UserRole> UserRoless { get; set; }
+        public DbSet<UserRole> UserRoless { get; set; }
         public DbSet<Video> Videos { get; set; }
 
 
@@ -38,7 +38,7 @@ namespace Persistence
 
 
                     modelBuilder.Entity<AppTag>()
-                .Property<Guid>("CourseId");
+                .Property<Guid>("UserRoleId");
                 modelBuilder.Entity<AppTag>()
              .Property<Guid>("TagName");
 
@@ -58,21 +58,21 @@ namespace Persistence
 
             });
 
-            /*
+            
             modelBuilder.Entity<Comment>(entity =>
             {
                 entity.HasKey(e => e.CommentId);
 
                 entity.Property(e => e.CommentId).HasColumnName("commentID");
 
-                entity.Property(e => e.AuthorId).HasColumnName("authorID");
+              //  entity.Property(e => e.AuthorId).HasColumnName("authorID");
 
                 entity.Property(e => e.CommentContent)
                     .IsRequired()
                     .HasMaxLength(250)
                     .HasColumnName("commentContent");
 
-                entity.Property(e => e.CourseId).HasColumnName("courseID");
+              //  entity.Property(e => e.CourseId).HasColumnName("courseID");
 
                 entity.Property(e => e.DateCreated)
                     .HasColumnType("datetime")
@@ -80,23 +80,30 @@ namespace Persistence
 
                 entity.Property(e => e.ReplyTo).HasColumnName("replyTo");
 
+                modelBuilder.Entity<Comment>()
+             .Property<Guid>("CourseId");
+                modelBuilder.Entity<Comment>()
+            .Property<string>("Id");
+
                 entity.HasOne(d => d.Author)
                     .WithMany(p => p.Comments)
-                    .HasForeignKey(d => d.AuthorId)
+                    .HasForeignKey("Id")
                     .HasConstraintName("FK_Comments_Users");
 
                 entity.HasOne(d => d.Course)
                     .WithMany(p => p.Comments)
-                    .HasForeignKey(d => d.CourseId)
+                    .HasForeignKey("CourseId")
                     .HasConstraintName("FK_Comments_Courses");
 
+                modelBuilder.Entity<Comment>()
+            .Property<string>("ReplyTo");
                 entity.HasOne(d => d.ReplyToC)
                     .WithMany(p => p.InverseReplyTo)
-                    .HasForeignKey(d => d.ReplyTo)
+                    .HasForeignKey("ReplyTo")
                     .HasConstraintName("FK_Comments_Comments");
             });
 
-            */
+            
             modelBuilder.Entity<Course>(entity =>
             {
                 entity.HasKey(e => e.CourseId)
@@ -182,16 +189,17 @@ namespace Persistence
                 */
 
 
-                modelBuilder.Entity<User>()
-            .Property<Guid>("UserRoleId");
+              //  modelBuilder.Entity<User>()
+          // .Property<int>("UserRoleId");
 
-                //   entity.Property(e => e.UserRoleId).IsRequired().HasColumnName("userRoleId");
-
+                //  entity.Property(e => e.UserRoleId).IsRequired().HasColumnName("userRoleId");
                 /*
                 entity.HasOne(d => d.UserRolee)
                     .WithMany(p => p.Users)
                     .HasForeignKey("UserRoleId");
-                */
+                 */
+
+
 
             });
 
@@ -224,8 +232,8 @@ namespace Persistence
 
             });
 
-            /*
-
+            
+             /*
             modelBuilder.Entity<UserRole>(entity =>
             {
                 entity.HasKey(e => e.UserRoleId);
@@ -237,9 +245,9 @@ namespace Persistence
                     .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("userRoleDescription");
-            });
+            }); */
 
-            */
+            
             modelBuilder.Entity<Video>(entity =>
             {
                 entity.HasKey(e => e.VideoId);
