@@ -3,10 +3,12 @@ using Application.Interfaces;
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -16,6 +18,7 @@ namespace Application.CourseModule
 {
     public class CreateCourse
     {
+      
         public class Command : IRequest<Result<Unit>>
         {
             public Course Course { get; set; }
@@ -34,13 +37,16 @@ namespace Application.CourseModule
 
         public class Handler : IRequestHandler<Command, Result<Unit>>
         {
+            private IHostingEnvironment _env;
+            
             private readonly TECHSCOPEContext _context;
             private readonly IUsernameAccessor _usernameAccessor;
 
-            public Handler(TECHSCOPEContext context, IUsernameAccessor usernameAccessor)
+            public Handler(TECHSCOPEContext context, IUsernameAccessor usernameAccessor, IHostingEnvironment env)
             {
                 _context = context;
                 _usernameAccessor = usernameAccessor;
+                _env = env;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
@@ -62,7 +68,8 @@ namespace Application.CourseModule
                     User = user
 
                 };
-
+                
+                Directory.CreateDirectory(_env.ContentRootPath + "/Videos/"+ request.Course.CourseId.ToString());
                 user.Courses.Add(course);
               
                 _context.Courses.Add(request.Course);
@@ -74,7 +81,9 @@ namespace Application.CourseModule
                 if (!result) return Result<Unit>.Failure("Failed to create course");
                 return Result<Unit>.Success(Unit.Value);
             }
+          
         }
+        
     }
 }
 

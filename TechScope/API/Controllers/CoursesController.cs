@@ -1,6 +1,7 @@
 ﻿using Application.CourseModule;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,6 @@ namespace API.Controllers
 {
     public class CoursesController : BaseApiController
     {
-
         [HttpGet]
         public async Task<IActionResult> GetAllCourses()
         {

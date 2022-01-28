@@ -2,10 +2,14 @@
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -15,11 +19,15 @@ namespace Application.CourseModule.VideoHandlers
 {
    public class CreateVideo
     {
+       
         public class Command : IRequest<Result<Unit>>
         {
+      
             public Video Video { get; set; }
 
             public  Guid CourseId { get; set; }
+
+
         }
 
         public class CommandValidator : AbstractValidator<Command>

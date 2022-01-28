@@ -2,11 +2,14 @@
 using Application.CourseModule.VideoHandlers;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,10 +17,16 @@ namespace API.Controllers
 {
     public class VideosController : BaseApiController
     {
+        private IHostingEnvironment _env;
+        private IFormFile file;
+        private static Video myvid;
+        public VideosController(IHostingEnvironment env)
+        {
+            _env = env;
+        }
 
 
-
-        [HttpGet("getAllVideos/{id}")]
+            [HttpGet("getAllVideos/{id}")]
         public async Task<ActionResult<List<Video>>> GetAllVideos(Guid id)
         {
             var videos =  await Mediator.Send(new VideoList.Query { CourseId = id});
@@ -30,13 +39,30 @@ namespace API.Controllers
         {
            var video = await Mediator.Send(new VideoDetails.Query { Id = id });
             return HandleResult(video);
-
         }
+        
+
 
         [HttpPost("{id}")]
         public async Task<IActionResult> CreateVideo(Video video, Guid id)
         {
+            myvid = video;
             return HandleResult(await Mediator.Send(new CreateVideo.Command { Video = video, CourseId = id }));
+        }
+
+
+
+        [HttpPost("add")]
+        public IActionResult CreateVideo(IFormFile file)
+        {
+            string vidid = myvid.VideoTitle.ToString();
+            string course = myvid.Course.CourseId.ToString();
+            var dir = _env.ContentRootPath;
+            using (var fileStream = new FileStream(Path.Combine(dir, "Videos",course,vidid + ".mp4"), FileMode.Create, FileAccess.Write))
+            {
+                file.CopyTo(fileStream);
+            }
+            return Ok("pobon");
         }
 
         [HttpPut("{id}")]
