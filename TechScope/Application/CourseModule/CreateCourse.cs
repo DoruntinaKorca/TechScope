@@ -22,8 +22,8 @@ namespace Application.CourseModule
         public class Command : IRequest<Result<Unit>>
         {
             public Course Course { get; set; }
+            public string Id { get; set; }
 
-          
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -40,21 +40,21 @@ namespace Application.CourseModule
             private IHostingEnvironment _env;
             
             private readonly TECHSCOPEContext _context;
-            private readonly IUsernameAccessor _usernameAccessor;
+          
 
-            public Handler(TECHSCOPEContext context, IUsernameAccessor usernameAccessor, IHostingEnvironment env)
+            public Handler(TECHSCOPEContext context, IHostingEnvironment env)
             {
                 _context = context;
-                _usernameAccessor = usernameAccessor;
+          
                 _env = env;
             }
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var user = await _context.Users.FirstOrDefaultAsync(x =>
-                x.UserName == _usernameAccessor.GetUsername());
+                var user = await _context.Users.FindAsync(request.Id);
+                if (user == null) return null;
 
-              
+
                 var course = new Course
                 {
                     CourseId = request.Course.CourseId,

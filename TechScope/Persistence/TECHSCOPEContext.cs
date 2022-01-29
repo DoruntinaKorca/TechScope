@@ -135,6 +135,13 @@ namespace Persistence
                     .HasColumnType("datetime")
                     .HasColumnName("dateUploaded");
 
+                modelBuilder.Entity<Course>()
+         .Property<string>("Id");
+
+                entity.HasOne(d => d.User)
+                   .WithMany(p => p.Courses)
+                   .HasForeignKey("Id");
+
                 //    entity.Property(e => e.UserId).HasColumnName("userId").IsRequired();
 
 

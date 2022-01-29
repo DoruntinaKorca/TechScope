@@ -22,7 +22,7 @@ namespace Domain
 
         //[Required]
         // public string UserId { get; set; }
-        [Required]
+     //   [Required]
         public User User { get; set; }
 
         public ICollection<AppTag> AppTags { get; set; } = new List<AppTag>();
