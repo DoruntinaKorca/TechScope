@@ -20,7 +20,7 @@ namespace Application.CourseModule
         {
             public Course Course { get; set; }
 
-          
+            public string Id { get; set; }
         }
 
         public class CommandValidator : AbstractValidator<Command>
@@ -45,10 +45,10 @@ namespace Application.CourseModule
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var user = await _context.Users.FirstOrDefaultAsync(x =>
-                x.UserName == _usernameAccessor.GetUsername());
+                var user = await _context.Users.FindAsync(request.Id);
+                if (user == null) return null;
 
-              
+
                 var course = new Course
                 {
                     CourseId = request.Course.CourseId,

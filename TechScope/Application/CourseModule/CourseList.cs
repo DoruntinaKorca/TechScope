@@ -33,6 +33,7 @@ namespace Application.CourseModule
                 var courses = await _context.Courses
                     .Include(v => v.Videos)
                     .Include(c=> c.Comments)
+                    .Include(a => a.AppTags)
                     .ToListAsync(cancellationToken);
                 return Result<List<Course>>.Success(courses);
             }

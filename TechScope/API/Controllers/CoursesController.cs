@@ -19,7 +19,7 @@ namespace API.Controllers
             return HandleResult(courses);
         }
 
-        [Authorize]
+      //  [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCourse(Guid id)
         {
@@ -27,10 +27,10 @@ namespace API.Controllers
             return HandleResult(result);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateCourse(Course course)
+        [HttpPost("{id}")]
+        public async Task<IActionResult> CreateCourse(Course course, string id)
         {
-            return HandleResult(await Mediator.Send(new CreateCourse.Command { Course = course }));
+            return HandleResult(await Mediator.Send(new CreateCourse.Command { Course = course, Id = id }));
         }
 
         [HttpPut("id")]
