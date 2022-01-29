@@ -45,9 +45,9 @@ namespace Application.CourseModule
 
                 if (course == null) return null;
 
-                var result = await _context.SaveChangesAsync() > 0;
+               
                 _mapper.Map(request.Course, course);
-
+                var result = await _context.SaveChangesAsync() > 0;
                 if (!result) return Result<Unit>.Failure("Failed to update the course");
                 return Result<Unit>.Success(Unit.Value);
             }

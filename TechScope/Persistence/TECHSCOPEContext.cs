@@ -229,7 +229,7 @@ namespace Persistence
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserPreferences)
-                    .HasForeignKey("UserId");
+                    .HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade);
 
                 //   entity.Property(e => e.PreferenceId).HasColumnName("preferenceId");
 
@@ -259,7 +259,11 @@ namespace Persistence
             {
                 entity.HasKey(e => e.VideoId);
 
-
+                modelBuilder.Entity<Video>()
+              .Property<Guid>("CourseId");
+                entity.HasOne(d => d.Course)
+                 .WithMany(p => p.Videos)
+                 .HasForeignKey("CourseId").OnDelete(DeleteBehavior.Cascade);
 
                 entity.Property(e => e.VideoId).HasColumnName("videoId");
 

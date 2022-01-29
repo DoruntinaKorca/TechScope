@@ -69,15 +69,13 @@ namespace Application.CourseModule
 
                 };
                 
-                Directory.CreateDirectory(_env.ContentRootPath + "/Videos/"+ request.Course.CourseId.ToString());
+           
                 user.Courses.Add(course);
               
-                _context.Courses.Add(request.Course);
-               
 
                var result = await _context.SaveChangesAsync()  > 0;
 
-
+                Directory.CreateDirectory(Path.Combine(_env.ContentRootPath,"Videos", course.CourseId.ToString()));
                 if (!result) return Result<Unit>.Failure("Failed to create course");
                 return Result<Unit>.Success(Unit.Value);
             }
@@ -86,4 +84,3 @@ namespace Application.CourseModule
         
     }
 }
-

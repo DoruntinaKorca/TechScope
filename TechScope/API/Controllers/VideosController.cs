@@ -1,4 +1,5 @@
-﻿using Application.CourseModule;
+﻿using Application.Core;
+using Application.CourseModule;
 using Application.CourseModule.VideoHandlers;
 using Domain;
 using MediatR;
@@ -20,13 +21,22 @@ namespace API.Controllers
         private IHostingEnvironment _env;
         private IFormFile file;
         private static Video myvid;
+        private static Guid Cid;
+        private readonly TECHSCOPEContext _context;
         public VideosController(IHostingEnvironment env)
         {
             _env = env;
         }
 
+        public class Command : IRequest<Result<Unit>>
+        {
+            public Course Course { get; set; }
+            public string Id { get; set; }
 
-            [HttpGet("getAllVideos/{id}")]
+        }
+
+
+        [HttpGet("getAllVideos/{id}")]
         public async Task<ActionResult<List<Video>>> GetAllVideos(Guid id)
         {
             var videos =  await Mediator.Send(new VideoList.Query { CourseId = id});
@@ -47,6 +57,7 @@ namespace API.Controllers
         public async Task<IActionResult> CreateVideo(Video video, Guid id)
         {
             myvid = video;
+            Cid = id;
             return HandleResult(await Mediator.Send(new CreateVideo.Command { Video = video, CourseId = id }));
         }
 
@@ -56,9 +67,9 @@ namespace API.Controllers
         public IActionResult CreateVideo(IFormFile file)
         {
             string vidid = myvid.VideoTitle.ToString();
-            string course = myvid.Course.CourseId.ToString();
+            string id = Cid.ToString();
             var dir = _env.ContentRootPath;
-            using (var fileStream = new FileStream(Path.Combine(dir, "Videos",course,vidid + ".mp4"), FileMode.Create, FileAccess.Write))
+            using (var fileStream = new FileStream(Path.Combine(dir, "Videos",id,vidid + ".mp4"), FileMode.Create, FileAccess.Write))
             {
                 file.CopyTo(fileStream);
             }

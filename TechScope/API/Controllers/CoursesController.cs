@@ -33,7 +33,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new CreateCourse.Command { Course = course, Id = id }));
         }
 
-        [HttpPut("id")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCourse(Guid id, Course course)
         {
             course.CourseId = id;
@@ -42,7 +42,7 @@ namespace API.Controllers
 
 
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCourse(Guid id)
         {
             return HandleResult(await Mediator.Send(new DeleteCourse.Command { Id = id }));
