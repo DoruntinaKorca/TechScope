@@ -29,7 +29,7 @@ namespace Application.CourseModule.TagHandlers
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
-                var appTag = await _context.AppTags.FindAsync(request.CourseId, request.TagName);
+                var appTag = await _context.AppTags.FindAsync(request.TagName, request.CourseId);
 
 
                 if (appTag == null) return null;

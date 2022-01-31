@@ -34,16 +34,12 @@ namespace Persistence
             modelBuilder.Entity<AppTag>(entity =>
             {
 
-            /*    
 
-
-                    modelBuilder.Entity<AppTag>()
-                .Property<Guid>("UserRoleId");
                 modelBuilder.Entity<AppTag>()
-             .Property<Guid>("TagName");
+            .Property<Guid>("CourseId");
+                modelBuilder.Entity<AppTag>()
+             .Property<string>("TagName");
 
-
-*/
                 entity.HasKey("TagName","CourseId" );
             
               //  entity.HasKey(e => new { e.CourseId, e.TagName });

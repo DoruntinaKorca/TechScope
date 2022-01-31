@@ -27,10 +27,10 @@ namespace API.Controllers
         }
 
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/{tagName}")]
         public async Task<IActionResult> DeleteAppTag(Guid id, string tagName)
         {
-            return HandleResult(await Mediator.Send(new DeleteAppTag.Command { TagName = tagName, CourseId = id }));
+            return HandleResult(await Mediator.Send(new DeleteAppTag.Command { CourseId = id, TagName = tagName }));
         }
     }
 }
