@@ -21,23 +21,25 @@ const Header = ({ isLoggedIn }) => {
   return (
     <Navbar expand="lg" style={{ backgroundColor: "#ec7300" }}>
       <Container>
-        <Navbar.Brand href="#home">Tech Scope</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">
+          Tech Scope
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             {!isLoggedIn ? (
               <>
-                <Nav.Link as={Link} to="/register">
+                <Nav.Link as={Link} to="register">
                   Home
                 </Nav.Link>
                 <Nav.Link href="#link">About</Nav.Link>
               </>
             ) : (
               <>
-                <Nav.Link as={Link} to="/courses">
+                <Nav.Link as={Link} to="upload-video">
                   Courses
                 </Nav.Link>
-                <Nav.Link as={Link} to="/courses">
+                <Nav.Link as={Link} to="welcome-page">
                   My Profile
                 </Nav.Link>
               </>
@@ -45,10 +47,10 @@ const Header = ({ isLoggedIn }) => {
           </Nav>
           {!isLoggedIn ? (
             <StyledDiv>
-              <Nav.Link as={Link} to="/login" style={{ color: "black" }}>
+              <Nav.Link as={Link} to="login" style={{ color: "black" }}>
                 Login
               </Nav.Link>
-              <Nav.Link as={Link} to="/register" style={{ color: "black" }}>
+              <Nav.Link as={Link} to="register" style={{ color: "black" }}>
                 Register
               </Nav.Link>
             </StyledDiv>

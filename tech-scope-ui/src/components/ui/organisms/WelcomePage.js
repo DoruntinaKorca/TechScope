@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import PreferenceCard from "../molecules/PreferenceCard";
-
+import { useNavigate } from "react-router-dom";
 const WelcomePage = () => {
   const list = [
     "Web Development",
@@ -16,7 +16,8 @@ const WelcomePage = () => {
     "Desktop Apps",
   ];
   const [preferences, setPreferences] = useState([]);
-
+  const navigate = useNavigate();
+  useEffect(() => {}, []);
   const updateList = (text) => {
     console.log("inside");
     if (preferences.includes(text)) {
@@ -36,6 +37,9 @@ const WelcomePage = () => {
   return (
     <Container fluid>
       <Row style={{ marginTop: "5vh", justifyContent: "space-between" }}>
+        <h3 style={{ color: "white", textAlign: "center" }}>
+          Please choose at least 3 preferences.
+        </h3>
         {list.map((text, index) => (
           <PreferenceCard
             key={index}
@@ -49,6 +53,7 @@ const WelcomePage = () => {
         <Button
           variant={preferences.length > 2 ? "primary" : "disabled"}
           style={{ marginTop: "2vh" }}
+          onClick={() => navigate("/")}
         >
           Next
         </Button>

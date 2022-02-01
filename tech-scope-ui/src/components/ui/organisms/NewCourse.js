@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import FormTemplate from "../molecules/FormTemplate";
 import { Container, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
@@ -14,7 +14,7 @@ const StyledText = styled.h2`
   color: white;
 `;
 
-const Login = () => {
+const NewCourse = () => {
   return (
     <Container fluid style={{ height: "100%" }}>
       <Row style={{ height: "inherit" }}>
@@ -31,8 +31,8 @@ const Login = () => {
           }}
         >
           <StyledFormContainer>
-            <StyledText>Welcome!</StyledText>
-            <FormTemplate mode="login" />
+            <StyledText>Make new Course.</StyledText>
+            <FormTemplate mode="course" />
           </StyledFormContainer>
         </Col>
         <Col xs={3}></Col>
@@ -41,4 +41,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default NewCourse;

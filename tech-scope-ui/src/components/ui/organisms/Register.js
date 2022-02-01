@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import FormTemplate from "../molecules/FormTemplate";
 import { Container, Row, Col } from "react-bootstrap";
 import styled from "styled-components";
@@ -13,6 +13,7 @@ const StyledFormContainer = styled.div`
 const StyledText = styled.h2`
   color: white;
 `;
+
 const Register = () => {
   return (
     <Container fluid style={{ height: "100%" }}>
@@ -31,7 +32,7 @@ const Register = () => {
         >
           <StyledFormContainer>
             <StyledText>Welcome!</StyledText>
-            <FormTemplate mode={false} />
+            <FormTemplate mode="register" />
           </StyledFormContainer>
         </Col>
         <Col xs={3}></Col>
