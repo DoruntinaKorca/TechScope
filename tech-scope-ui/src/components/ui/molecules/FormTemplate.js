@@ -4,7 +4,7 @@ import StandardButton from "../atoms/StandardButton";
 import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -25,8 +25,14 @@ const FormTemplate = ({ mode }) => {
   const [logEmail, setLogEmail] = useState("");
   const [logPassword, setLogPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
-
-  const history = useNavigate();
+  const [courseTitle, setCourseTitle] = useState("");
+  const [courseDescription, setCourseDescription] = useState("");
+  const [courseCreated, setCourseCreated] = useState(false);
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoDescription, setVideoDescription] = useState("");
+  const [videoLength, setVideoLength] = useState(0);
+  const [file, setFile] = useState(null);
+  const history = useHistory();
 
   const submitRegister = async (e) => {
     e.preventDefault();
@@ -49,7 +55,7 @@ const FormTemplate = ({ mode }) => {
           })
           .then(function (response) {
             console.log(response);
-            history("/login");
+            history.push("/login");
           })
           .catch(function (error) {
             console.log(error);
@@ -74,8 +80,10 @@ const FormTemplate = ({ mode }) => {
         if (response.data.token === undefined) {
           setLoginError(true);
         } else {
+          localStorage.setItem("token", response.data.token);
           localStorage.setItem("username", response.data.userName);
-          history("/welcome-page");
+          localStorage.setItem("userid", response.data.id);
+          history.push("/welcome-page");
         }
       })
       .catch(function (error) {
@@ -84,6 +92,51 @@ const FormTemplate = ({ mode }) => {
       });
   };
 
+  const submitNewCourse = async (e) => {
+    e.preventDefault();
+    let userId = localStorage.getItem("userid");
+    await axios
+      .post(`http://localhost:5000/api/Courses/${userId}`, {
+        courseTitle: courseTitle,
+        courseDescription: courseDescription,
+        dateUploaded: "2022-02-01T20:22:39.131Z",
+        dateModified: "2022-02-01T20:22:39.131Z",
+        courseViews: 0,
+        courseRating: 0,
+        courseApprovedBy: 0,
+      })
+      .then((response) => {
+        setCourseCreated(true);
+      })
+      .catch((e) => console.log(e));
+  };
+
+  const submitNewVideo = async (e) => {
+    e.preventDefault();
+    await axios
+      .post(
+        "http://localhost:5000/api/Videos/4d37ce9b-7224-4699-80e9-49aee9522dfb",
+        {
+          videoTitle: videoTitle,
+          videoDescription: videoDescription,
+          videoLength: videoLength,
+        }
+      )
+      .then((response) => {
+        console.log(response);
+        const formData = new FormData();
+        formData.append("file", file);
+        axios({
+          method: "post",
+          url: "http://localhost:5000/api/Videos/add",
+          data: formData,
+          headers: { "Content-Type": "multipart/form-data" },
+        })
+          .then((response) => console.log(response))
+          .catch((err) => console.log(err));
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <>
       {mode === "login" ? (
@@ -181,45 +234,68 @@ const FormTemplate = ({ mode }) => {
           </StyledDiv>
         </Form>
       ) : mode === "video" ? (
-        <Form>
-          <Form.Group className="mb-3">
-            <Form.Select aria-label="Select Course">
-              <option>View Course</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
-            </Form.Select>
-          </Form.Group>
+        <Form onSubmit={(e) => submitNewVideo(e)} encType="multipart/form-data">
+          <Form.Group className="mb-3"></Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <StyledLabel>Title</StyledLabel>
-            <Form.Control type="text" placeholder="Enter Title" />
+            <Form.Control
+              type="text"
+              placeholder="Enter Title"
+              onChange={(e) => setVideoTitle(e.target.value)}
+            />
           </Form.Group>
           <Form.Group className="mb-3">
             <StyledLabel>Description</StyledLabel>
-            <Form.Control type="text" placeholder="Enter Description" />
+            <Form.Control
+              type="text"
+              placeholder="Enter Description"
+              onChange={(e) => setVideoDescription(e.target.value)}
+            />
           </Form.Group>
           <Form.Group className="mb-3">
             <StyledLabel>Enter Video Length</StyledLabel>
-            <Form.Control type="text" placeholder="Enter Video Length" />
+            <Form.Control
+              type="text"
+              placeholder="Enter Video Length"
+              onChange={(e) => setVideoLength(e.target.value)}
+            />
           </Form.Group>
           <Form.Group controlId="formFile" className="mb-3">
             <StyledLabel>Upload Video</StyledLabel>
             <Form.Label>Default file input example</Form.Label>
-            <Form.Control type="file" />
+            <Form.Control
+              type="file"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
           </Form.Group>
           <StyledDiv>
             <StandardButton text="Submit" type="submit"></StandardButton>
           </StyledDiv>
         </Form>
       ) : (
-        <Form>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+        <Form onSubmit={(e) => submitNewCourse(e)}>
+          {courseCreated ? (
+            <Form.Text style={{ color: "green" }}>
+              Course Created Successfully!
+            </Form.Text>
+          ) : (
+            ""
+          )}
+          <Form.Group className="mb-3">
             <StyledLabel>Title</StyledLabel>
-            <Form.Control type="text" placeholder="Enter Title" />
+            <Form.Control
+              type="text"
+              placeholder="Enter Title"
+              onChange={(e) => setCourseTitle(e.target.value)}
+            />
           </Form.Group>
           <Form.Group className="mb-3">
             <StyledLabel>Description</StyledLabel>
-            <Form.Control type="text" placeholder="Enter Description" />
+            <Form.Control
+              type="text"
+              placeholder="Enter Description"
+              onChange={(e) => setCourseDescription(e.target.value)}
+            />
           </Form.Group>
           <StyledDiv>
             <StandardButton text="Create" type="submit"></StandardButton>

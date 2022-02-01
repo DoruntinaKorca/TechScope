@@ -1,5 +1,10 @@
 import { Row, Col, Container } from "react-bootstrap";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch as Routes,
+  Route,
+  Link,
+} from "react-router-dom";
 import Header from "./components/ui/molecules/Header";
 import Login from "./components/ui/organisms/Login";
 import Register from "./components/ui/organisms/Register";
@@ -26,12 +31,24 @@ function App() {
           <Col xs={2}></Col>
           <Col xs={8} style={{ overflowX: "hidden" }}>
             <Routes>
-              <Route path="/" exact element={<Home />} />
-              <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
-              <Route path="welcome-page" element={<WelcomePage />} />
-              <Route path="upload-video" element={<UploadVideo />} />
-              <Route path="new-course" element={<NewCourse />} />
+              <Route path="/" exact>
+                <Home />
+              </Route>
+              <Route path="/login" exact>
+                <Login />
+              </Route>
+              <Route path="/register" exact>
+                <Register />
+              </Route>
+              <Route path="/welcome-page" exact>
+                <WelcomePage />
+              </Route>
+              <Route path="/upload-video" exact>
+                <UploadVideo />
+              </Route>
+              <Route path="/new-course" exact>
+                <NewCourse />
+              </Route>
             </Routes>
           </Col>
           <Col xs={2}></Col>

@@ -30,7 +30,7 @@ const PreferenceCard = ({ selected, text, click }) => {
       }}
       onClick={() => click(text)}
     >
-      <h3 style={{ color: "white" }}>{text}</h3>
+      <h3 style={{ color: "white" }}>{text.preferenceName}</h3>
     </StyledCard>
   );
 };
