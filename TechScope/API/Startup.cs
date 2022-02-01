@@ -49,10 +49,10 @@ namespace API
         {
 
             services.AddControllers(opt =>
-            { 
+            {
                 //ensures that every endpoint in our api requires authentication unless we tell it otherwise
-                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-                opt.Filters.Add(new AuthorizeFilter(policy));
+               var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+               opt.Filters.Add(new AuthorizeFilter(policy));
             }).AddNewtonsoftJson(options =>
            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
 ).AddFluentValidation(Configuration => {

@@ -19,6 +19,7 @@ namespace Application.Core
          //   CreateMap<Course, CourseDto>();
             CreateMap<Video, VideoDto>();
             CreateMap<Comment, CommentDto>();
+          
         }
     }
 }

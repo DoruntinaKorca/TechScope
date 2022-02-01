@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [AllowAnonymous]
+   // [AllowAnonymous]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -28,6 +28,7 @@ namespace API.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        [AllowAnonymous]
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
@@ -39,11 +40,19 @@ namespace API.Controllers
 
             if (result.Succeeded)
             {
-                return CreateUserObject(user);
+
+                 return new UserDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Token = _tokenService.CreateToken(user)
+                };
+
             }
             return Unauthorized();
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
@@ -76,7 +85,8 @@ namespace API.Controllers
 
 
         //getting the currently logged-in user
-        //[Authorize]
+        [Authorize]
+        //[AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
@@ -96,6 +106,7 @@ namespace API.Controllers
         {
             return new UserDto
             {
+                Id = user.Id,
                 UserName = user.UserName,
                 Token = _tokenService.CreateToken(user)
             };
