@@ -53,8 +53,10 @@ namespace Application.UserModule.PreferenceHandlers
                     Preference = request.Preference
                 };
 
+
                
                 request.Preference.UserPreferences.Add(userPreferences);
+
                 _context.Preferences.Add(request.Preference);
 
 
